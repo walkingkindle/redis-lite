@@ -32,6 +32,11 @@ namespace Infrastructure.Impelementations
         {
             var command = lines[2].ToUpperInvariant();
 
+            if (lines[2].Contains("PING"))
+            {
+                lines[2] = "PING";
+            }
+
             lines[2] = command;
 
             if(_parsers.TryGetValue(command, out var parserObject) && parserObject is ICommandParser parser)
