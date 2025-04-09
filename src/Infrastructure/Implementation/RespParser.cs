@@ -34,7 +34,7 @@ namespace Infrastructure.Impelementations
 
             if (lines[2].Contains("PING"))
             {
-                lines[2] = "PING";
+                command = "PING";
             }
 
             lines[2] = command;
