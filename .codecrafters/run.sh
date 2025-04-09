@@ -8,4 +8,5 @@
 
 set -e # Exit on failure
 
-exec /tmp/codecrafters-build-redis-csharp/codecrafters-redis "$@"
+# Execute the built application (adjust if your executable name is different)
+exec /tmp/codecrafters-build-redis-csharp/Presentation "$@"

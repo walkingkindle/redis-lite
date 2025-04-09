@@ -1,0 +1,16 @@
+﻿using Application.Commands.Contracts;
+using CSharpFunctionalExtensions;
+using Domain.Interfaces;
+
+namespace Application.Commands.Implementations
+{
+    public class Error : IMethodExecutor
+    {
+        public Result<RedisResponse> Execute(EndpointBase endpoint)
+        {
+            return Result.Success<RedisResponse>(RedisResponse.Error("ERR Not Supported"));
+
+
+        }
+    }
+}
