@@ -23,6 +23,7 @@ namespace Infrastructure.Impelementations
             {
                 return Result.Failure<EndpointBase>("Incoming message must not be empty");
             }
+            Console.WriteLine($"Received incoming message : {incomingMessage}");
             string[] lines = incomingMessage.Split(Environment.NewLine);
 
             return ParseInternal(lines);
