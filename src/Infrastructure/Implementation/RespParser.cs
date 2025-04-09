@@ -23,24 +23,24 @@ namespace Infrastructure.Impelementations
             {
                 return Result.Failure<EndpointBase>("Incoming message must not be empty");
             }
-            Console.WriteLine($"Received incoming message : {incomingMessage}");
-            string[] lines = incomingMessage.Split(Environment.NewLine);
+
+            Console.WriteLine($"Received incoming message: {incomingMessage}");
+
+            string[] lines = incomingMessage.Split(new[] { "\r\n" }, StringSplitOptions.None);
+
+            if (lines.Length < 3)
+            {
+                return Result.Failure<EndpointBase>("Message format is invalid. Expected at least 3 lines.");
+            }
 
             return ParseInternal(lines);
         }
-
         private Result<EndpointBase> ParseInternal(string[] lines)
         {
             var command = lines[2].ToUpperInvariant();
-
-            if (lines[2].Contains("PING"))
-            {
-                command = "PING";
-            }
-
             lines[2] = command;
 
-            if(_parsers.TryGetValue(command, out var parserObject) && parserObject is ICommandParser parser)
+            if (_parsers.TryGetValue(command, out var parserObject) && parserObject is ICommandParser parser)
             {
                 return parser.Validate(lines);
             }
