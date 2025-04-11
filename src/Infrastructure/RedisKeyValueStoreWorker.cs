@@ -22,7 +22,7 @@ namespace Infrastructure
             {
                 if (_store.RedisKeyValueStoreDictionary.IsEmpty)
                 {
-                    await Task.Delay(50, stoppingToken);
+                    await Task.Delay(5, stoppingToken);
                     continue;
                 }
                 foreach (var entry in _store.RedisKeyValueStoreDictionary)
@@ -34,7 +34,7 @@ namespace Infrastructure
                     RemoveExpiredItem(entry.Key);
                 }
 
-                await Task.Delay(50, stoppingToken); 
+                await Task.Delay(5, stoppingToken); 
             }
         }
 
@@ -42,6 +42,7 @@ namespace Infrastructure
     public void RemoveExpiredItem(string key)
     {
         bool removed = _store.RedisKeyValueStoreDictionary.TryRemove(key, out var value);
+        _logger.LogInformation($"Found some expired keys {key}");
         if (removed)
         {
             _logger.LogInformation($"Removed expired key: {key}");

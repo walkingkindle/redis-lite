@@ -3,7 +3,6 @@ using CSharpFunctionalExtensions;
 using Domain.Interfaces;
 using Infrastructure.Interfaces;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Impelementations
 {
@@ -23,8 +22,6 @@ namespace Infrastructure.Impelementations
             {
                 return Result.Failure<EndpointBase>("Incoming message must not be empty");
             }
-
-            Console.WriteLine($"Received incoming message: {incomingMessage}");
 
             string[] lines = incomingMessage.Split(new[] { "\r\n" }, StringSplitOptions.None);
 
