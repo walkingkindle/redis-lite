@@ -14,13 +14,19 @@ namespace Main
 {
     public class Startup
     {
+        private readonly string[] _args;
+
+        public Startup(string[] args)
+        {
+            args = _args;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<ServerWorker>();
             services.AddHostedService<RedisKeyValueStoreWorker>();
 
             var config = new ConfigurationBuilder()
-                .AddCommandLine(Environment.GetCommandLineArgs())
+                .AddCommandLine(_args)
                 .Build();
 
             var args = new AppArguments();

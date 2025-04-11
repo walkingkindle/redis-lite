@@ -8,7 +8,7 @@ class Program
         var builder = Host.CreateDefaultBuilder(args)
                           .ConfigureServices((hostContext, services) =>
                           {
-                              var startup = new Startup();
+                              var startup = new Startup(args);
                               startup.ConfigureServices(services);
                           });
         var host = builder.Build();
