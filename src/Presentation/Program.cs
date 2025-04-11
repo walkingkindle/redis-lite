@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Presentation.Interfaces;
-using System.Net.Sockets;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace Main;
 class Program

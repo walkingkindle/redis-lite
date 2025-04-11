@@ -18,6 +18,8 @@ namespace Application
             services.AddTransient<ICommandParser, GetParser>();
             services.AddTransient<ICommandParser, SetParser>();
 
+            services.AddTransient<ICommandParser, ConfigGetParser>();
+
             services.AddTransient<Ping>();
 
             services.AddTransient<Echo>();
@@ -27,6 +29,8 @@ namespace Application
             services.AddTransient<Set>();
 
             services.AddTransient<Get>();
+
+            services.AddTransient<ConfigGet>();
 
             services.AddTransient<ICommandHandler, CommandHandler>();
 

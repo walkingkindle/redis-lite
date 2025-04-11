@@ -9,7 +9,7 @@ namespace Application.Parsers.Implementations
     {
         public string Command => "PING";
 
-        public Result<EndpointBase> GetEndpointFromRawString(string[] lines)
+        private Result<EndpointBase> GetEndpointFromRawString(string[] lines)
         {
            for(int i = 0; i < lines.Length; i++)
             {

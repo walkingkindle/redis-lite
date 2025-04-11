@@ -11,7 +11,7 @@ namespace Application.Parsers.Implementations
 
         public string Expiry => "px";
 
-        public Result<EndpointBase> GetEndpointFromRawString(string[] lines)
+        private Result<EndpointBase> GetEndpointFromRawString(string[] lines)
         {
             bool hasExpiry = false;
             

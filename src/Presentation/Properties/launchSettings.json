@@ -2,7 +2,11 @@
   "profiles": {
     "Presentation": {
       "commandName": "Project",
+      "commandLineArgs": "--dir /tmp/redis-files --dbfilename dump.rdb",
       "hotReloadEnabled": false
+    },
+    "Profile 1": {
+      "commandName": "Executable"
     }
   }
 }

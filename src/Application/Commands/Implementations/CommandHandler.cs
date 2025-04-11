@@ -17,13 +17,16 @@ namespace Application.CommandHandlers.Implementations
 
         private readonly Set _set;
 
-        public CommandHandler(Ping ping, Error error, Echo echo, Get get, Set set)
+        private readonly ConfigGet _configGet;
+
+        public CommandHandler(Ping ping, Error error, Echo echo, Get get, Set set, ConfigGet configGet)
         {
             _ping = ping;
             _error = error;
             _echo = echo;
             _get = get;
             _set = set;
+            _configGet = configGet;
         }
 
         public Result<RedisResponse> Handle(Result<EndpointBase> endpointPayload)
@@ -42,6 +45,8 @@ namespace Application.CommandHandlers.Implementations
                     return _get.Execute(endpointPayload.Value);
                 case "SET":
                     return _set.Execute(endpointPayload.Value);
+                case "CONFIG GET":
+                    return _configGet.Execute(endpointPayload.Value);
                 default:
                     return _error.Execute(endpointPayload.Value);
             }

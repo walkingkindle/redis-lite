@@ -7,6 +7,5 @@ namespace Application.Parsers.Contracts
     {
         public string Command { get;}
         public Result<EndpointBase> Validate(Maybe<string[]> lines);
-        public Result<EndpointBase> GetEndpointFromRawString(string[] lines);
     }
 }
