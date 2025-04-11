@@ -18,7 +18,7 @@ namespace Main
 
         public Startup(string[] args)
         {
-            args = _args;
+            _args = args;
         }
         public void ConfigureServices(IServiceCollection services)
         {
