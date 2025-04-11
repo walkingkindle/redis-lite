@@ -21,7 +21,7 @@ namespace Application.Commands.Implementations
             {
                 return Result.Success(RedisResponse.Bulk(redisValue));
             }
-            return Result.Success<RedisResponse>(RedisResponse.Simple("nil"));
+            return Result.Success<RedisResponse>(RedisResponse.NullBulk());
 
 
         }
