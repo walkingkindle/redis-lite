@@ -19,7 +19,9 @@ namespace Application.CommandHandlers.Implementations
 
         private readonly ConfigGet _configGet;
 
-        public CommandHandler(Ping ping, Error error, Echo echo, Get get, Set set, ConfigGet configGet)
+        private readonly Keys _keys;
+
+        public CommandHandler(Ping ping, Error error, Echo echo, Get get, Set set, ConfigGet configGet, Keys keys)
         {
             _ping = ping;
             _error = error;
@@ -27,6 +29,7 @@ namespace Application.CommandHandlers.Implementations
             _get = get;
             _set = set;
             _configGet = configGet;
+            _keys = keys;
         }
 
         public Result<RedisResponse> Handle(Result<EndpointBase> endpointPayload)
@@ -47,6 +50,8 @@ namespace Application.CommandHandlers.Implementations
                     return _set.Execute(endpointPayload.Value);
                 case "CONFIG GET":
                     return _configGet.Execute(endpointPayload.Value);
+                case "KEYS":
+                    return _keys.Execute(endpointPayload.Value);
                 default:
                     return _error.Execute(endpointPayload.Value);
             }
