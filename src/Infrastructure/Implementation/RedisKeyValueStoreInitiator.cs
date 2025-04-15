@@ -1,30 +1,31 @@
-﻿using Domain.Contracts;
-using Domain.Models;
+﻿using Application.RDBPersistence.Contracts;
+using Domain.Contracts;
+using Domain.Implementations;
 using Domain.RDBPersistence;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Implementation
 {
     public class RedisKeyValueStoreInitiator : IRedisKeyValueStoreInitiator
     {
-        private readonly AppArguments _args;
 
-        public RedisKeyValueStoreInitiator(AppArguments args)
+        private readonly RedisKeyValueStore _keyValueStore;
+        private readonly IHexReader _hexReader;
+
+        public RedisKeyValueStoreInitiator(RedisKeyValueStore redisKeyValueStore, IHexReader hexReader)
         {
-            _args = args;
-        }
+            _keyValueStore = redisKeyValueStore;
 
+            _hexReader = hexReader;
+        }
         public async Task FillDictionary()
         {
-            string path = $"{_args.Dir}/{_args.DbFileName}";
+            RedisMessage redisMessageFromFile = await  _hexReader.ReadRedisMessage();
 
-            byte[] bytesArray = await File.ReadAllBytesAsync(path);
+            if (_keyValueStore.Get(redisMessageFromFile.RedisKeyValue.Key) is null){
 
-            RedisMessage redisMessage = new RedisMessage();
-
-            redisMessage.Header = "REDIS011";
-
-
-
+                _keyValueStore.Add(redisMessageFromFile.RedisKeyValue.Key, redisMessageFromFile.RedisKeyValue.Value);
+            }
 
         }
     }

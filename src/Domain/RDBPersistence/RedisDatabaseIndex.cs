@@ -4,6 +4,6 @@
     {
         public override string Start => "FE";
 
-        public string Index { get; set; }
+        public int Index { get; set; }
     }
 }

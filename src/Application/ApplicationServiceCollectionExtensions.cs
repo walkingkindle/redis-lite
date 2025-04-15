@@ -3,6 +3,8 @@ using Application.Commands.Contracts;
 using Application.Commands.Implementations;
 using Application.Parsers.Contracts;
 using Application.Parsers.Implementations;
+using Application.RDBPersistence.Contracts;
+using Application.RDBPersistence.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -37,6 +39,10 @@ namespace Application
             services.AddTransient<Keys>();
 
             services.AddTransient<ICommandHandler, CommandHandler>();
+
+            services.AddTransient<IHexReader, HexReader>();
+
+            services.AddTransient<IGenericKeyValueRDBParser, GenericKeyValueRDBParser>();
 
 
 

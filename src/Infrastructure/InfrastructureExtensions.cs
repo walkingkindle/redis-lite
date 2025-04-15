@@ -1,7 +1,7 @@
-﻿using Infrastructure.Impelementations;
+﻿using Domain.Contracts;
+using Infrastructure.Impelementations;
+using Infrastructure.Implementation;
 using Infrastructure.Interfaces;
-using Infrastructure.RDBPersistence.Contracts;
-using Infrastructure.RDBPersistence.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
@@ -12,7 +12,8 @@ namespace Infrastructure
         {
             services.AddTransient<IRespParser, RespParser>();
 
-            services.AddTransient<IHexReader, HexReader>();
+            services.AddTransient<IRedisKeyValueStoreInitiator, RedisKeyValueStoreInitiator>();
+
 
             return services;
 

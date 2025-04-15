@@ -1,4 +1,5 @@
-﻿using Domain.Implementations;
+﻿using Domain.Contracts;
+using Domain.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -10,14 +11,18 @@ namespace Infrastructure
 
         private readonly RedisKeyValueStore _store;
 
-        public RedisKeyValueStoreWorker(ILogger<RedisKeyValueStoreWorker> logger, RedisKeyValueStore store)
+        private readonly IRedisKeyValueStoreInitiator _redisKeyValueStoreInitiator;
+
+        public RedisKeyValueStoreWorker(ILogger<RedisKeyValueStoreWorker> logger, RedisKeyValueStore store, IRedisKeyValueStoreInitiator redisKeyValueStoreInitiator)
         {
             _logger = logger;
             _store = store;
+            _redisKeyValueStoreInitiator = redisKeyValueStoreInitiator;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _redisKeyValueStoreInitiator.FillDictionary();
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (_store.RedisKeyValueStoreDictionary.IsEmpty)

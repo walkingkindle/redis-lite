@@ -7,9 +7,11 @@
 
         public RDBSizeInformation RedisSizeInformation { get; set; }
 
+        public RedisDatabaseIndex RedisDatabaseIndex { get; set; }
+
         public RDBKeyValue RedisKeyValue { get; set; }
 
-        public RDBFooter RedisFooter { get; set; }
+        public RDBChecksum RedisChecksum { get; set; }
     }
 
 }

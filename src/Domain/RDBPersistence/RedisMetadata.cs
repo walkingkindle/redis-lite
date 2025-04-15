@@ -2,9 +2,6 @@
     public class RedisMetadata : RedisSubtypeBase
     {
         public override string Start => "FA";
-
-        public string AttributeName { get; set; }
-
-        public string AttributeValue { get; set; }
+        public required string Value { get; set; }
     }
 }
