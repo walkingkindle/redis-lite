@@ -10,13 +10,9 @@ namespace Domain.Implementations
 
         public void Add(string key, string value, double? expiryDate = null)
         {
-            if (expiryDate is null)
-            {
-                expiryDate = defaultExpiryDate;
-            }
             RedisKeyValueStoreDictionary.AddOrUpdate(
             key, 
-            new RedisValue { Value = value, ExpirationDate = DateTime.Now.AddMilliseconds(expiryDate.Value) },
+            new RedisValue { Value = value, ExpirationDate =  expiryDate != null ? DateTime.Now.AddMilliseconds(expiryDate.Value) : null},
             (existingKey, existingValue) => new RedisValue
             {
                 Value = value, 

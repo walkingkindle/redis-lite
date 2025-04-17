@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Domain.Contracts;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Main;
 class Program
@@ -12,6 +14,12 @@ class Program
                               startup.ConfigureServices(services);
                           });
         var host = builder.Build();
+
+        using (var scope = host.Services.CreateScope())
+        {
+            var initiator = scope.ServiceProvider.GetRequiredService<IRedisKeyValueStoreInitiator>();
+            await initiator.FillDictionary(); // Fill on startup
+        }
         await host.RunAsync();
     }
 }

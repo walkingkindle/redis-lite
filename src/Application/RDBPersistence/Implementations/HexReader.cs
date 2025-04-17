@@ -1,6 +1,7 @@
 ﻿using Application.RDBPersistence.Contracts;
 using Domain.Models;
 using Domain.RDBPersistence;
+using System.Text;
 
 namespace Application.RDBPersistence.Implementations
 {
@@ -8,117 +9,80 @@ namespace Application.RDBPersistence.Implementations
     {
         private readonly AppArguments _args;
 
-        private readonly IGenericKeyValueRDBParser _genericParser;
-
-        public HexReader(AppArguments args, IGenericKeyValueRDBParser genericParser)
+        public HexReader(AppArguments args)
         {
             _args = args;
-            _genericParser = genericParser;
         }
         public async Task<RedisMessage> ReadRedisMessage()
         {
             string path = $"{_args.Dir}/{_args.DbFileName}";
 
-            byte[] byteMessage = await File.ReadAllBytesAsync(path);
-
-            string[] stringByteMessage = byteMessage.Select(b => b.ToString($"{b:X2}")).ToArray();
+            byte[] byteMessage = File.ReadAllBytes(path);
 
             RedisMessage redisMessage = new RedisMessage();
 
             redisMessage.Header = "REDIS011";
 
-            byteMessage = byteMessage.Skip(9).ToArray();
-
             int offset = 0;
 
-            while(offset < byteMessage.Length)
-            {
-                byte current = byteMessage[offset];
-
-                if(current == 0xfa)
-                {
-                    (string metadata, int bytesConusmed) = ParseValue(byteMessage, offset);
-
-                    redisMessage.RedisMetadata = new RedisMetadata { Value = metadata };
-
-                    offset += bytesConusmed;
-                    continue;
-                }
-
-                if(current == 0xfe)
-                {
-                    var (index, bytesConsumed) = ParseValue(byteMessage, offset);
-
-                    redisMessage.RedisDatabaseIndex = new RedisDatabaseIndex { Index = Int32.Parse(index) };
-
-                    offset += bytesConsumed;
-
-                    continue;
-                }
-
-                if(current == 0x00)
-                {
-                    var (key,value, bytesConsumed) = ParseKeyValue(byteMessage, offset);
-
-                    redisMessage.RedisKeyValue = new RDBKeyValue { Key = key, Value = value };
-
-                    offset += bytesConsumed;
-
-                    continue;
-                }
-
-                if (current == 0xff)
-                {
-                    if (offset + 8 < byteMessage.Length)
-                    {
-                        byte[] checksum = byteMessage.Skip(offset + 1).Take(8).ToArray();
-                        redisMessage.RedisChecksum = new RDBChecksum { Checksum = checksum }; // assuming RedisMessage has a `Checksum` property
-
-                    }
-                    break;
-                }
-                }
+            RDBKeyValue keyValue = ParseKeyValue(byteMessage);
+            redisMessage.RedisKeyValue = keyValue;
 
             return redisMessage;
+        }
+
+    public RDBKeyValue ParseKeyValue(byte[] byteMessage)
+    {
+            // Offset starts at the FE marker (254)
+        int offsetIndex = 0;
+
+        for(int a = 0; a < byteMessage.Length; a++)
+        {
+            if (byteMessage[a] == 254)
+            {
+                offsetIndex = a;
+                break;
             }
 
-        private (string key, string value, int bytesConsumed) ParseKeyValue(byte[] byteMessage, int offset)
-        {
-            int start = offset;
-            offset++;
-
-            (string key, int keyOffset) = ParseValue(byteMessage, offset);
-
-            offset += keyOffset;
-
-            (string value, int valueOffset) = ParseValue(byteMessage, offset);
-            offset += valueOffset;
-
-
-            return (key, value, offset - start);
         }
 
-        private (string metadata, int offset) ParseValue(byte[] byteMessage, int offset)
+        int offset = 254;
+        int i = offsetIndex;
+
+        if (byteMessage[i] != 0xFE)
+            throw new Exception("Expected SELECTDB opcode (0xFE)");
+
+        i++; // Skip 0xFE
+        byte dbIndex = byteMessage[i]; // optional: use if needed
+        i++;
+
+        if (byteMessage[i] != 0xFB) // next expected opcode for string
+            throw new Exception("Expected String Value Type (0xFB)");
+
+        i++; // now at expiry (3 bytes) – skip
+        i += 3;
+
+        // Key length
+        byte keyLength = byteMessage[i];
+        i++;
+
+        string key = Encoding.UTF8.GetString(byteMessage, i, keyLength);
+        i += keyLength;
+
+        // Value length
+        byte valueLength = byteMessage[i];
+        i++;
+
+        string value = Encoding.UTF8.GetString(byteMessage, i, valueLength);
+        i += valueLength;
+
+        return new RDBKeyValue
         {
-            //for now assume that the first element determines length
-
-            int start = offset;
-
-            offset++;
-
-            int length = DetermineLength(byteMessage[offset]);
-
-            string encodedValue = _genericParser.Parse(byteMessage, length );
-
-            offset += length;
-                    
-            return (encodedValue, offset - start);
-
-
-            //what if here _parse returns an exception??
-        }
-
-        private int DetermineLength(byte lengthByte)
+            Key = key,
+            Value = value
+        };
+    }
+       private int DetermineLength(byte lengthByte)
         {
             return lengthByte & 0x3F; //for now just 6 bit, later extend le
         }

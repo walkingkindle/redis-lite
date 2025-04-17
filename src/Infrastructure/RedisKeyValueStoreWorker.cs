@@ -1,5 +1,4 @@
-﻿using Domain.Contracts;
-using Domain.Implementations;
+﻿using Domain.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -11,18 +10,14 @@ namespace Infrastructure
 
         private readonly RedisKeyValueStore _store;
 
-        private readonly IRedisKeyValueStoreInitiator _redisKeyValueStoreInitiator;
-
-        public RedisKeyValueStoreWorker(ILogger<RedisKeyValueStoreWorker> logger, RedisKeyValueStore store, IRedisKeyValueStoreInitiator redisKeyValueStoreInitiator)
+        public RedisKeyValueStoreWorker(ILogger<RedisKeyValueStoreWorker> logger, RedisKeyValueStore store)
         {
             _logger = logger;
             _store = store;
-            _redisKeyValueStoreInitiator = redisKeyValueStoreInitiator;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _redisKeyValueStoreInitiator.FillDictionary();
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (_store.RedisKeyValueStoreDictionary.IsEmpty)
@@ -32,7 +27,7 @@ namespace Infrastructure
                 }
                 foreach (var entry in _store.RedisKeyValueStoreDictionary)
                 {
-                    if (entry.Value.ExpirationDate >= DateTime.Now)
+                    if (entry.Value.ExpirationDate >= DateTime.Now || entry.Value.ExpirationDate is null)
                     {
                         continue;
                     }
