@@ -13,9 +13,8 @@ namespace Application.RDBPersistence.Implementations
         {
             _args = args;
         }
-        public async Task<RedisMessage> ReadRedisMessage()
+        public async Task<RedisMessage> ReadRedisMessage(string path)
         {
-            string path = $"{_args.Dir}/{_args.DbFileName}";
 
             byte[] byteMessage = File.ReadAllBytes(path);
 

@@ -5,6 +5,6 @@ namespace Application.RDBPersistence.Contracts
 {
     public interface IHexReader
     {
-       Task<RedisMessage> ReadRedisMessage();
+       Task<RedisMessage> ReadRedisMessage(string path);
     }
 }
