@@ -42,8 +42,6 @@ namespace Application
 
             services.AddTransient<IHexReader, HexReader>();
 
-            services.AddTransient<IGenericKeyValueRDBParser, GenericKeyValueRDBParser>();
-
 
 
 

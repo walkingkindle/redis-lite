@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain
 {
-   public static class DomainApplicationServiceExtensions
+   public static class DomainServiceCollectionExtensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {

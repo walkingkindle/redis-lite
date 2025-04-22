@@ -32,7 +32,6 @@ namespace Application.RDBPersistence.Implementations
 
     public RDBKeyValue ParseKeyValue(byte[] byteMessage)
     {
-            // Offset starts at the FE marker (254)
         int offsetIndex = 0;
 
         for(int a = 0; a < byteMessage.Length; a++)
@@ -51,24 +50,22 @@ namespace Application.RDBPersistence.Implementations
         if (byteMessage[i] != 0xFE)
             throw new Exception("Expected SELECTDB opcode (0xFE)");
 
-        i++; // Skip 0xFE
-        byte dbIndex = byteMessage[i]; // optional: use if needed
+        i++; 
+        byte dbIndex = byteMessage[i]; 
         i++;
 
-        if (byteMessage[i] != 0xFB) // next expected opcode for string
-            throw new Exception("Expected String Value Type (0xFB)");
+        if (byteMessage[i] != 0xFB) 
+        throw new Exception("Expected String Value Type (0xFB)");
 
-        i++; // now at expiry (3 bytes) – skip
+        i++; 
         i += 3;
 
-        // Key length
         byte keyLength = byteMessage[i];
         i++;
 
         string key = Encoding.UTF8.GetString(byteMessage, i, keyLength);
         i += keyLength;
 
-        // Value length
         byte valueLength = byteMessage[i];
         i++;
 
@@ -81,9 +78,5 @@ namespace Application.RDBPersistence.Implementations
             Value = value
         };
     }
-       private int DetermineLength(byte lengthByte)
-        {
-            return lengthByte & 0x3F; //for now just 6 bit, later extend le
-        }
     }
 }
