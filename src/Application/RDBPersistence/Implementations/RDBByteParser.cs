@@ -36,7 +36,6 @@ namespace Application.RDBPersistence.Implementations
                         if (reader.PeekByte() == 0)
                         {
                             reader.ReadByte();
-                            break;
                         }
                         var keyValue = ParseKeyValue(reader);
                         redisKeyValue.Add(keyValue);
