@@ -20,7 +20,7 @@ namespace Main
         {
             _args = args;
         }
-        public async void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<ServerWorker>();
             services.AddHostedService<RedisKeyValueStoreWorker>();

@@ -18,7 +18,7 @@ class Program
         using (var scope = host.Services.CreateScope())
         {
             var initiator = scope.ServiceProvider.GetRequiredService<IRedisKeyValueStoreInitiator>();
-            await initiator.FillDictionary(); // Fill on startup
+            initiator.FillDictionary(); 
         }
         await host.RunAsync();
     }

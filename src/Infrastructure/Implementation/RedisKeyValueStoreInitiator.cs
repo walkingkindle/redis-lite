@@ -11,18 +11,18 @@ namespace Infrastructure.Implementation
     {
 
         private readonly RedisKeyValueStore _keyValueStore;
-        private readonly IHexReader _hexReader;
         private readonly AppArguments _args;
+        private readonly IRDBByteParser _rdbByteParser;
 
 
-        public RedisKeyValueStoreInitiator(RedisKeyValueStore redisKeyValueStore, IHexReader hexReader, AppArguments appArguments)
+        public RedisKeyValueStoreInitiator(RedisKeyValueStore redisKeyValueStore, IRDBByteParser rdbyteParser, AppArguments appArguments)
         {
             _keyValueStore = redisKeyValueStore;
-
-            _hexReader = hexReader;
             _args = appArguments;
+            _rdbByteParser = rdbyteParser;
+            
         }
-        public async Task FillDictionary()
+        public void FillDictionary()
         {
             string path = $"{_args.Dir}/{_args.DbFileName}";
 
@@ -30,11 +30,15 @@ namespace Infrastructure.Implementation
             {
                 return;
             }
-            RedisMessage redisMessageFromFile = await  _hexReader.ReadRedisMessage(path);
+            RedisMessage redisMessageFromFile = _rdbByteParser.ParseRDBFile(File.ReadAllBytes(path));
 
-            if (_keyValueStore.Get(redisMessageFromFile.RedisKeyValue.Key) is null){
+            foreach (var entry in redisMessageFromFile.RedisKeyValue)
+            {
 
-                _keyValueStore.Add(redisMessageFromFile.RedisKeyValue.Key, redisMessageFromFile.RedisKeyValue.Value);
+                if (_keyValueStore.Get(entry.Key) is null)
+                {
+                    _keyValueStore.Add(entry.Key, entry.Value);
+                }
             }
 
         }

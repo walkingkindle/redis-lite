@@ -40,7 +40,11 @@ namespace Application
 
             services.AddTransient<ICommandHandler, CommandHandler>();
 
-            services.AddTransient<IHexReader, HexReader>();
+            //services.AddTransient<IHexReader, HexReader>();
+
+            services.AddTransient<IByteReader, ByteReader>();
+
+            services.AddTransient<IRDBByteParser, RDBByteParser>();
 
 
 

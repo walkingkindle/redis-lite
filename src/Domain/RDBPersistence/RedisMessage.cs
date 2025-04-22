@@ -9,7 +9,7 @@
 
         public RedisDatabaseIndex RedisDatabaseIndex { get; set; }
 
-        public RDBKeyValue RedisKeyValue { get; set; }
+        public List<RDBKeyValue> RedisKeyValue { get; set; }
 
         public RDBChecksum RedisChecksum { get; set; }
     }

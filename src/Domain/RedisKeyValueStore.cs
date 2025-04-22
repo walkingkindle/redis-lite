@@ -6,7 +6,6 @@ namespace Domain.Implementations
     {
         public ConcurrentDictionary<string, RedisValue> RedisKeyValueStoreDictionary { get; } = new ConcurrentDictionary<string, RedisValue>();
 
-        public double defaultExpiryDate = 10000;
 
         public void Add(string key, string value, double? expiryDate = null)
         {

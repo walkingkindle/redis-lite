@@ -2,6 +2,6 @@
 {
     public interface IRedisKeyValueStoreInitiator
     {
-        public Task FillDictionary();
+        public void FillDictionary();
     }
 }
